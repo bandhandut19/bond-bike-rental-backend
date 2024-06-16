@@ -1,6 +1,6 @@
-import { model, Schema } from 'mongoose'
-import { TUser } from './user.interface'
-import { UserRoles } from './user.constant'
+import { model, Schema } from 'mongoose';
+import { TUser } from './user.interface';
+import { UserRoles } from './user.constant';
 
 const userSchema = new Schema<TUser>(
   {
@@ -11,10 +11,12 @@ const userSchema = new Schema<TUser>(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
       required: true,
+      select: 0,
     },
     phone: {
       type: String,
@@ -33,6 +35,6 @@ const userSchema = new Schema<TUser>(
   {
     timestamps: true,
   },
-)
+);
 
-export const User = model<TUser>('user', userSchema)
+export const User = model<TUser>('user', userSchema);

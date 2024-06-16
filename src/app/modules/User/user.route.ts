@@ -1,15 +1,16 @@
-import express from 'express'
+import express from 'express';
+import { UserControllers } from './user.controller';
 
-const authRouter = express.Router()
+const authRouter = express.Router();
 
-authRouter.post('/signup')
-authRouter.post('/login')
+authRouter.post('/signup', UserControllers.signUp);
+authRouter.post('/login');
 
-export const AuthRoutes = authRouter
+export const AuthRoutes = authRouter;
 
-const usersRouter = express.Router()
+const usersRouter = express.Router();
 
-usersRouter.get('/me')
-usersRouter.put('/me')
+usersRouter.get('/me');
+usersRouter.put('/me');
 
-export const UsersRoutes = usersRouter
+export const UsersRoutes = usersRouter;

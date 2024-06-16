@@ -1,6 +1,7 @@
-import express from 'express'
-import { AuthRoutes, UsersRoutes } from '../modules/User/user.route'
-const router = express.Router()
+import express from 'express';
+import { AuthRoutes, UsersRoutes } from '../modules/User/user.route';
+import { BikeRoutes } from '../modules/Bike/bike.route';
+const router = express.Router();
 
 const moduleRoutes = [
   {
@@ -11,8 +12,12 @@ const moduleRoutes = [
     path: '/users',
     route: UsersRoutes,
   },
-]
+  {
+    path: '/bikes',
+    route: BikeRoutes,
+  },
+];
 
-moduleRoutes.forEach((route) => router.use(route.path, route.route))
+moduleRoutes.forEach((route) => router.use(route.path, route.route));
 
-export default router
+export default router;
