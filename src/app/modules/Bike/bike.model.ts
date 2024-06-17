@@ -20,11 +20,11 @@ const bikeSchema = new Schema<TBike>(
       default: true,
     },
     cc: {
-      type: String,
+      type: Number,
       required: true,
     },
     year: {
-      type: String,
+      type: Number,
       required: true,
     },
     model: {
