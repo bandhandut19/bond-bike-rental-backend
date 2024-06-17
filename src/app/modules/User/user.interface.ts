@@ -24,4 +24,4 @@ export interface UserModel extends Model<TUser> {
   ): Promise<Boolean>;
 }
 
-export type TUserRoles = keyof typeof UserRoles;
+export type TUserRoles = 'admin' | 'user';
