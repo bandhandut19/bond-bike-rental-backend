@@ -45,5 +45,8 @@ userSchema.statics.isEmailExists = async function (email: string) {
 userSchema.statics.encryptPassword = async function (plainPassword: string) {
   return await bcrypt.hash(plainPassword, Number(config.salt));
 };
+userSchema.pre('save', async function () {
+  this.password = await User.encryptPassword(this.password);
+});
 
 export const User = model<TUser, UserModel>('user', userSchema);
