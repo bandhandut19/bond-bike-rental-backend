@@ -2,7 +2,7 @@ import { AnyZodObject, z } from 'zod';
 import { UserRoles } from './user.constant';
 
 const UserRole = z.enum([UserRoles.ADMIN, UserRoles.USER]);
-const createUserValidationSchema: AnyZodObject = z.object({
+const signUpUserValidationSchema: AnyZodObject = z.object({
   body: z.object({
     name: z.string(),
     email: z.string(),
@@ -22,6 +22,17 @@ const updateUserValidationSchema: AnyZodObject = z.object({
 });
 
 export const UserValidations = {
-  createUserValidationSchema,
+  signUpUserValidationSchema,
   updateUserValidationSchema,
+};
+
+const loginValidationSchema = z.object({
+  body: z.object({
+    email: z.string(),
+    password: z.string(),
+  }),
+});
+
+export const AuthValidations = {
+  loginValidationSchema,
 };

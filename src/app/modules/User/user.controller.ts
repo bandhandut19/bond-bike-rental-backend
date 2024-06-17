@@ -14,7 +14,19 @@ const signUp = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const login = helperAsync(async (req, res, next) => {
+  const payload = req.body;
+  const result = await UserServices.login(payload);
+
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.CREATED,
+    message: 'User logged in Successfully',
+    data: result,
+  });
+});
 
 export const UserControllers = {
   signUp,
+  login,
 };

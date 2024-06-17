@@ -49,4 +49,11 @@ userSchema.pre('save', async function () {
   this.password = await User.encryptPassword(this.password);
 });
 
+userSchema.statics.isValidPassword = async function (
+  plainPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainPassword, hashedPassword);
+};
+
 export const User = model<TUser, UserModel>('user', userSchema);
