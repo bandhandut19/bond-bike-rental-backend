@@ -1,15 +1,16 @@
 import httpStatus from 'http-status';
 import helperAsync from '../../utils/helperAsync';
+import HelperResponse from '../../utils/helperResponse';
 import { UserServices } from './user.service';
 
 const signUp = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const result = await UserServices.signUp(payload);
 
-  res.status(httpStatus.CREATED).json({
+  HelperResponse(res, {
     success: true,
-    statusCode: 201,
-    message: 'User registered successfully',
+    stausCode: httpStatus.CREATED,
+    message: 'User Registered Successfully',
     data: result,
   });
 });

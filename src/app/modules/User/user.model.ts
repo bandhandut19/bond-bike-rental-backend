@@ -1,8 +1,9 @@
 import { model, Schema } from 'mongoose';
-import { TUser } from './user.interface';
+import { TUser, UserModel } from './user.interface';
 import { UserRoles } from './user.constant';
-
-const userSchema = new Schema<TUser>(
+import bcrypt from 'bcrypt';
+import config from '../../config';
+const userSchema = new Schema<TUser, UserModel>(
   {
     name: {
       type: String,
@@ -37,4 +38,12 @@ const userSchema = new Schema<TUser>(
   },
 );
 
-export const User = model<TUser>('user', userSchema);
+userSchema.statics.isEmailExists = async function (email: string) {
+  return await User.findOne({ email });
+};
+
+userSchema.statics.encryptPassword = async function (plainPassword: string) {
+  return await bcrypt.hash(plainPassword, Number(config.salt));
+};
+
+export const User = model<TUser, UserModel>('user', userSchema);
