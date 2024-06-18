@@ -42,7 +42,6 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
         'Bike is not available for rent! Currently rented out!!!',
       );
     }
-    console.log(isBikeAvailable);
     // changing availability to false
     const changeAvailablity = await Bike.findByIdAndUpdate(
       isBikeExists,
@@ -91,7 +90,6 @@ const returnBikeIntoDB = async (id: string) => {
       },
     );
     const bookedBike = await Booking.findOne({ bikeId: id }).session(session);
-    console.log(bookedBike);
 
     const isReturnedPreviously = bookedBike?.isReturned;
     if (isReturnedPreviously) {

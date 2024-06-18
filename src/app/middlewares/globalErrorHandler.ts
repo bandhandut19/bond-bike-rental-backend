@@ -6,6 +6,7 @@ import HelperCastError from '../errors/HelperCastError';
 import HelperDuplicateError from '../errors/HelperDuplicateError';
 import config from '../config';
 import HelperValidationError from '../errors/HelperValidationError';
+import HelperZodError from '../errors/HelperZodError';
 
 const globarErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;
@@ -41,6 +42,20 @@ const globarErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = convertedError?.statusCode;
     message = convertedError?.message;
     errorMessage = convertedError?.errorMessage;
+  } else if (err?.name === 'ZodError') {
+    const convertedError = HelperZodError(err);
+    statusCode = convertedError?.statusCode;
+    message = convertedError?.message;
+    errorMessage = convertedError?.errorMessage;
+  } else if (err instanceof Error) {
+    statusCode = 400;
+    message = err?.message;
+    errorMessage = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
 
   return res.status(statusCode).json({
@@ -48,7 +63,7 @@ const globarErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message,
     errorMessage,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
-    // err,
+    err,
   });
 };
 
