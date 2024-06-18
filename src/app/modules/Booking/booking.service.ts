@@ -6,6 +6,8 @@ import { Booking } from './booking.model';
 import { User } from '../User/user.model';
 import { startSession } from 'mongoose';
 import { Bike } from '../Bike/bike.model';
+import HelperError from '../../errors/HelperError';
+import httpStatus from 'http-status';
 
 const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
   const session = await startSession();
@@ -16,7 +18,10 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
 
     const userEmail = user?.user_email;
     if (!userEmail) {
-      throw new Error('User email not found in JWT payload');
+      throw new HelperError(
+        httpStatus.NOT_FOUND,
+        'User email not found in JWT payload',
+      );
     }
 
     const userData = await User.findOne({ email: userEmail }).session(session);
@@ -27,12 +32,13 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     // const isBikeExists = await Bike.isBikeExists(bikeId);
     const isBikeExists = await Bike.findById(bikeId).session(session);
     if (!isBikeExists) {
-      throw new Error('Bike not found');
+      throw new HelperError(httpStatus.NOT_FOUND, 'Bike not found');
     }
     //checking if bike available
     const isBikeAvailable = isBikeExists?.isAvailable;
     if (!isBikeAvailable) {
-      throw new Error(
+      throw new HelperError(
+        httpStatus.BAD_REQUEST,
         'Bike is not available for rent! Currently rented out!!!',
       );
     }
