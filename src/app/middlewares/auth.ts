@@ -14,11 +14,11 @@ const auth = (...userRoles: TUserRoles[]) => {
       config.jwt_access_secret_key as string,
       function (err, decoded) {
         if (err) {
-          throw new Error('You are not authorized');
+          throw new Error('You have no access to this route');
         }
         const role = (decoded as JwtPayload)?.user_role;
         if (userRoles && !userRoles.includes(role)) {
-          throw new Error('You are not authorized');
+          throw new Error('You have no access to this route');
         }
         req.user = decoded as JwtPayload;
         next();

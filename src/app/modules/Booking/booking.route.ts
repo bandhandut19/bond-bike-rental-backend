@@ -12,7 +12,7 @@ router.post(
   validate(BookingValidations.createBookingValidationSchema),
   BookingControllers.createRental,
 );
-router.put('/');
-router.get('/');
+router.put('/:id/return', auth(UserRoles.ADMIN), BookingControllers.returnBike);
+router.get('/', auth(UserRoles.USER), BookingControllers.myRentals);
 
 export const BookingRoutes = router;

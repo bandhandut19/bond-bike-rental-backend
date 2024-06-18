@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { TBike } from './bike.interface';
+import { BikeModel, TBike } from './bike.interface';
 
-const bikeSchema = new Schema<TBike>(
+const bikeSchema = new Schema<TBike, BikeModel>(
   {
     name: {
       type: String,
@@ -40,5 +40,7 @@ const bikeSchema = new Schema<TBike>(
     timestamps: true,
   },
 );
-
-export const Bike = model<TBike>('bike', bikeSchema);
+bikeSchema.statics.isBikeExists = async function (id: string) {
+  return await Bike.findById(id);
+};
+export const Bike = model<TBike, BikeModel>('bike', bikeSchema);

@@ -1,3 +1,5 @@
+import { Model, Types } from 'mongoose';
+
 export type TBike = {
   name: string;
   description: string;
@@ -8,3 +10,6 @@ export type TBike = {
   model: string;
   brand: string;
 };
+export interface BikeModel extends Model<TBike> {
+  isBikeExists(id: Types.ObjectId): Promise<TBike>;
+}
