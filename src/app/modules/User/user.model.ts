@@ -48,6 +48,10 @@ userSchema.statics.encryptPassword = async function (plainPassword: string) {
 userSchema.pre('save', async function () {
   this.password = await User.encryptPassword(this.password);
 });
+userSchema.post('save', async function (doc, next) {
+  doc.password = '';
+  next();
+});
 
 userSchema.statics.isValidPassword = async function (
   plainPassword,
@@ -55,5 +59,10 @@ userSchema.statics.isValidPassword = async function (
 ) {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
+
+// userSchema.pre('findOneAndUpdate', async function (next) {
+//   const result = this;
+//   console.log(this._update);
+// });
 
 export const User = model<TUser, UserModel>('user', userSchema);

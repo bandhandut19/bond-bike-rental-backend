@@ -13,12 +13,12 @@ const getAllBikesFromDB = async () => {
 
 const updateBikeIntoDB = async (payload: Partial<TBike>, id: string) => {
   // only "perHourField" can be updated
-  const payloadFields = Object.keys(payload);
-  const payloadLength = payloadFields.length;
+  // const payloadFields = Object.keys(payload);
+  // const payloadLength = payloadFields.length;
 
-  if (payloadLength > 1) {
-    throw new Error('only pricePerHour Field can be updated');
-  }
+  // if (payloadLength > 1) {
+  //   throw new Error('only pricePerHour Field can be updated');
+  // }
   const result = await Bike.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,

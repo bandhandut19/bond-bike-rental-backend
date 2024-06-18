@@ -18,10 +18,11 @@ const bookingSchema = new Schema<TBooking>(
     },
     returnTime: {
       type: String,
-      default: '',
+      default: null,
     },
     totalCost: {
       type: Number,
+      default: 0,
     },
     isReturned: {
       type: Boolean,

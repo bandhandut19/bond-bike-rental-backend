@@ -25,8 +25,33 @@ const login = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const getProfile = helperAsync(async (req, res, next) => {
+  const payload = req?.user;
+  const result = await UserServices.getProfileFromDB(payload);
 
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.OK,
+    message: 'User profile retrived Successfully',
+    data: result,
+  });
+});
+
+const updateProfile = helperAsync(async (req, res, next) => {
+  const updatedData = req.body;
+  const payload = req?.user;
+  const result = await UserServices.updateProfileIntoDB(updatedData, payload);
+
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.CREATED,
+    message: 'Profile updated Successfully',
+    data: result,
+  });
+});
 export const UserControllers = {
   signUp,
   login,
+  getProfile,
+  updateProfile,
 };

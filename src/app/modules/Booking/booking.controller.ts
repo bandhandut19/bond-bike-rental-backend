@@ -5,7 +5,8 @@ import { BookingServices } from './booking.service';
 
 const createRental = helperAsync(async (req, res, next) => {
   const payload = req.body;
-  const result = await BookingServices.createRentalIntoDB(payload);
+  const user = req.user;
+  const result = await BookingServices.createRentalIntoDB(payload, user);
 
   HelperResponse(res, {
     success: true,
