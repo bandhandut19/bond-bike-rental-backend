@@ -4,6 +4,7 @@ import helperAsync from '../../utils/helperAsync';
 import HelperResponse from '../../utils/helperResponse';
 import { UserServices } from './user.service';
 import helperNoDataFound from '../../utils/helperNoDataFound';
+import config from '../../config';
 
 const signUp = helperAsync(async (req, res, next) => {
   const payload = req.body;
@@ -21,12 +22,18 @@ const signUp = helperAsync(async (req, res, next) => {
 const login = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const result = await UserServices.login(payload);
-
+  const { userRefreshToken, userAccessToken } = result;
+  res.cookie('refreshToken', userRefreshToken, {
+    httpOnly: true,
+    secure: config.NODE_ENV === 'production',
+  });
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.CREATED,
     message: 'User logged in Successfully',
-    data: result,
+    data: {
+      userAccessToken,
+    },
   });
 });
 const getProfile = helperAsync(async (req, res, next) => {

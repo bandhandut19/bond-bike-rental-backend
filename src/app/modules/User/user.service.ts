@@ -28,11 +28,19 @@ const login = async (payload: TAuth) => {
     jwtPayload,
     config.jwt_access_secret_key as string,
     {
-      expiresIn: '5d',
+      expiresIn: config.jwt_access_expires_in,
+    },
+  );
+  const userRefreshToken = jwt.sign(
+    jwtPayload,
+    config.jwt_refresh_secret_key as string,
+    {
+      expiresIn: config.jwt_refresh_expires_in,
     },
   );
   return {
     userAccessToken,
+    userRefreshToken,
   };
 };
 const getProfileFromDB = async (payload: JwtPayload) => {
