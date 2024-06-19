@@ -1,4 +1,6 @@
+import httpStatus from 'http-status';
 import config from '../config';
+import HelperError from '../errors/HelperError';
 import { TUserRoles } from '../modules/User/user.interface';
 import helperAsync from '../utils/helperAsync';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -8,9 +10,15 @@ const auth = (...userRoles: TUserRoles[]) => {
     if (!token) {
       throw new Error('You are not authorized');
     }
-
+    const getToken = token?.split(' ');
+    if (getToken[0] !== 'Bearer') {
+      throw new HelperError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route',
+      );
+    }
     jwt.verify(
-      token,
+      getToken[1],
       config.jwt_access_secret_key as string,
       function (err, decoded) {
         if (err) {

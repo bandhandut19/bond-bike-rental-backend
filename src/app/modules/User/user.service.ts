@@ -31,7 +31,6 @@ const login = async (payload: TAuth) => {
       expiresIn: '5d',
     },
   );
-  console.log(jwt.decode(userAccessToken));
   return {
     userAccessToken,
   };
