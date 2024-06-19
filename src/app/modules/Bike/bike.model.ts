@@ -43,4 +43,5 @@ const bikeSchema = new Schema<TBike, BikeModel>(
 bikeSchema.statics.isBikeExists = async function (id: string) {
   return await Bike.findById(id);
 };
+
 export const Bike = model<TBike, BikeModel>('bike', bikeSchema);

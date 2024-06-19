@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status';
 import helperAsync from '../../utils/helperAsync';
 import HelperResponse from '../../utils/helperResponse';
 import { BikeServices } from './bike.service';
+import helperNoDataFound from '../../utils/helperNoDataFound';
 
 const createBike = helperAsync(async (req, res, next) => {
   const payload = req.body;
@@ -15,8 +17,10 @@ const createBike = helperAsync(async (req, res, next) => {
 });
 
 const getAllBikes = helperAsync(async (req, res, next) => {
-  const payload = req.body;
   const result = await BikeServices.getAllBikesFromDB();
+  if (result.length <= 0) {
+    helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,

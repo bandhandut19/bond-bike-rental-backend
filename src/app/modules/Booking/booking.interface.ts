@@ -6,5 +6,5 @@ export type TBooking = {
   startTime: string;
   returnTime: string;
   totalCost: number;
-  isReturned: Boolean;
+  isReturned: boolean;
 };
