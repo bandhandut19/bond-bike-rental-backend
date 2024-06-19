@@ -64,9 +64,21 @@ const updateProfile = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const refreshToken = helperAsync(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+  const result = await UserServices.refreshToken(refreshToken);
+
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.CREATED,
+    message: 'Access token retrived Successfully',
+    data: result,
+  });
+});
 export const UserControllers = {
   signUp,
   login,
   getProfile,
   updateProfile,
+  refreshToken,
 };
