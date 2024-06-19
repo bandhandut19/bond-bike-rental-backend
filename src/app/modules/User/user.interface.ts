@@ -1,5 +1,4 @@
 import { Model } from 'mongoose';
-import { UserRoles } from './user.constant';
 
 export interface TUser {
   name: string;
@@ -21,7 +20,7 @@ export interface UserModel extends Model<TUser> {
   isValidPassword(
     plainPassword: string,
     hashedPassword: string,
-  ): Promise<Boolean>;
+  ): Promise<boolean>;
 }
 
 export type TUserRoles = 'admin' | 'user';
