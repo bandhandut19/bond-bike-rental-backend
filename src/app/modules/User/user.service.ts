@@ -85,6 +85,11 @@ const refreshToken = async (token: string) => {
 };
 const getProfileFromDB = async (payload: JwtPayload) => {
   const { user_email: email } = payload;
+
+  const isUserExists = await User.findOne({ email: email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
   const userProfile = await User.findOne({ email });
 
   return userProfile;
@@ -92,6 +97,10 @@ const getProfileFromDB = async (payload: JwtPayload) => {
 
 const updateProfileIntoDB = async (updatedData: TUser, payload: JwtPayload) => {
   const { user_email: email } = payload;
+  const isUserExists = await User.findOne({ email: email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
   const result = await User.findOneAndUpdate({ email }, updatedData, {
     new: true,
     runValidators: true,

@@ -38,9 +38,9 @@ const userSchema = new Schema<TUser, UserModel>(
   },
 );
 
-userSchema.statics.isEmailExists = async function (email: string) {
-  return await User.findOne({ email });
-};
+// userSchema.statics.isEmailExists = async function (email: string) {
+//   return await User.findOne({ email });
+// };
 
 userSchema.statics.encryptPassword = async function (plainPassword: string) {
   return await bcrypt.hash(plainPassword, Number(config.salt));

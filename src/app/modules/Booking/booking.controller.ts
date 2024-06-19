@@ -21,7 +21,8 @@ const createRental = helperAsync(async (req, res, next) => {
 });
 const returnBike = helperAsync(async (req, res, next) => {
   const id = req.params.id;
-  const result = await BookingServices.returnBikeIntoDB(id);
+  const user = req.user;
+  const result = await BookingServices.returnBikeIntoDB(id, user);
   if (result === null) {
     return helperNoDataFound(res);
   }

@@ -7,7 +7,8 @@ import helperNoDataFound from '../../utils/helperNoDataFound';
 
 const createBike = helperAsync(async (req, res, next) => {
   const payload = req.body;
-  const result = await BikeServices.createBikeIntoDB(payload);
+  const user = req.user;
+  const result = await BikeServices.createBikeIntoDB(payload, user);
   if (result === null) {
     return helperNoDataFound(res);
   }
@@ -20,7 +21,8 @@ const createBike = helperAsync(async (req, res, next) => {
 });
 
 const getAllBikes = helperAsync(async (req, res, next) => {
-  const result = await BikeServices.getAllBikesFromDB();
+  const payload = req.user;
+  const result = await BikeServices.getAllBikesFromDB(payload);
   if (result.length <= 0) {
     return helperNoDataFound(res);
   }
@@ -34,7 +36,8 @@ const getAllBikes = helperAsync(async (req, res, next) => {
 const updateBike = helperAsync(async (req, res, next) => {
   const id = req.params.id;
   const payload = req.body;
-  const result = await BikeServices.updateBikeIntoDB(payload, id);
+  const user = req.user;
+  const result = await BikeServices.updateBikeIntoDB(payload, id, user);
   if (result === null) {
     return helperNoDataFound(res);
   }
@@ -47,7 +50,8 @@ const updateBike = helperAsync(async (req, res, next) => {
 });
 const deleteBike = helperAsync(async (req, res, next) => {
   const id = req.params.id;
-  const result = await BikeServices.deleteBikeFromDB(id);
+  const user = req.user;
+  const result = await BikeServices.deleteBikeFromDB(id, user);
   if (result === null) {
     return helperNoDataFound(res);
   }

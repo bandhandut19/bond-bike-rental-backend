@@ -18,10 +18,7 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
 
     const userEmail = user?.user_email;
     if (!userEmail) {
-      throw new HelperError(
-        httpStatus.NOT_FOUND,
-        'User email not found in JWT payload',
-      );
+      throw new HelperError(httpStatus.NOT_FOUND, 'User email not found');
     }
 
     const userData = await User.findOne({ email: userEmail }).session(session);
@@ -70,7 +67,12 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
   }
 };
 
-const returnBikeIntoDB = async (id: string) => {
+const returnBikeIntoDB = async (id: string, user: JwtPayload) => {
+  const { user_email } = user;
+  const isUserExists = await User.findOne({ email: user_email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
   const session = await startSession();
   try {
     session.startTransaction();
