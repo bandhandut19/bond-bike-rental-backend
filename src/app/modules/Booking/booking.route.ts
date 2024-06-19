@@ -13,6 +13,10 @@ router.post(
   BookingControllers.createRental,
 );
 router.put('/:id/return', auth(UserRoles.ADMIN), BookingControllers.returnBike);
-router.get('/', auth(UserRoles.USER), BookingControllers.myRentals);
+router.get(
+  '/',
+  auth(UserRoles.USER, UserRoles.ADMIN),
+  BookingControllers.myRentals,
+);
 
 export const BookingRoutes = router;
