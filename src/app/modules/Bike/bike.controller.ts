@@ -8,6 +8,9 @@ import helperNoDataFound from '../../utils/helperNoDataFound';
 const createBike = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const result = await BikeServices.createBikeIntoDB(payload);
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,
@@ -19,7 +22,7 @@ const createBike = helperAsync(async (req, res, next) => {
 const getAllBikes = helperAsync(async (req, res, next) => {
   const result = await BikeServices.getAllBikesFromDB();
   if (result.length <= 0) {
-    helperNoDataFound(res);
+    return helperNoDataFound(res);
   }
   HelperResponse(res, {
     success: true,
@@ -32,6 +35,9 @@ const updateBike = helperAsync(async (req, res, next) => {
   const id = req.params.id;
   const payload = req.body;
   const result = await BikeServices.updateBikeIntoDB(payload, id);
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,
@@ -42,6 +48,9 @@ const updateBike = helperAsync(async (req, res, next) => {
 const deleteBike = helperAsync(async (req, res, next) => {
   const id = req.params.id;
   const result = await BikeServices.deleteBikeFromDB(id);
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,

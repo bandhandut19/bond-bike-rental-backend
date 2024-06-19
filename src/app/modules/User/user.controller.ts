@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status';
 import helperAsync from '../../utils/helperAsync';
 import HelperResponse from '../../utils/helperResponse';
 import { UserServices } from './user.service';
+import helperNoDataFound from '../../utils/helperNoDataFound';
 
 const signUp = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const result = await UserServices.signUp(payload);
-
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.CREATED,
@@ -28,7 +32,9 @@ const login = helperAsync(async (req, res, next) => {
 const getProfile = helperAsync(async (req, res, next) => {
   const payload = req?.user;
   const result = await UserServices.getProfileFromDB(payload);
-
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,
@@ -41,7 +47,9 @@ const updateProfile = helperAsync(async (req, res, next) => {
   const updatedData = req.body;
   const payload = req?.user;
   const result = await UserServices.updateProfileIntoDB(updatedData, payload);
-
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.CREATED,

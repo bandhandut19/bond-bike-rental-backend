@@ -137,10 +137,9 @@ const getAllRentalsFromDB = async (user: JwtPayload) => {
     throw new Error('User not found');
   }
   const userRentals = await Booking.find({ userId: isUserExists });
-  if (!userRentals) {
-    throw new Error('No rental data found');
+  if (userRentals.length <= 0) {
+    throw new Error('No data found');
   }
-
   return userRentals;
 };
 export const BookingServices = {
