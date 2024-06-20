@@ -13,10 +13,6 @@ async function main() {
   } catch (err) {
     console.log(err);
   }
-
-  app.get('/', (req, res) => {
-    res.send('Welcome to Bond Bike Rental');
-  });
   process.on('unhandledRejection', () => {
     if (server) {
       server.close(() => {
