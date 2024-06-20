@@ -14,6 +14,9 @@ async function main() {
     console.log(err);
   }
 
+  app.get('/', (req, res) => {
+    res.send('Welcome to Bond Bike Rental');
+  });
   process.on('unhandledRejection', () => {
     if (server) {
       server.close(() => {
