@@ -43,6 +43,7 @@ const login = async (payload: TAuth) => {
   return {
     userAccessToken,
     userRefreshToken,
+    user,
   };
 };
 const refreshToken = async (token: string) => {

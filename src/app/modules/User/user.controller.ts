@@ -22,19 +22,28 @@ const signUp = helperAsync(async (req, res, next) => {
 const login = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const result = await UserServices.login(payload);
-  const { userRefreshToken, userAccessToken } = result;
+  const { userRefreshToken, userAccessToken, user } = result;
   res.cookie('refreshToken', userRefreshToken, {
     httpOnly: true,
     secure: config.NODE_ENV === 'production',
   });
-  HelperResponse(res, {
+
+  res.status(httpStatus.OK).json({
     success: true,
-    stausCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: 'User logged in Successfully',
-    data: {
-      userAccessToken,
-    },
+    token: userAccessToken,
+    data: user,
   });
+
+  // HelperResponse(res, {
+  //   success: true,
+  //   stausCode: httpStatus.CREATED,
+  //   message: 'User logged in Successfully',
+  //   data: {
+  //     userAccessToken,
+  //   },
+  // });
 });
 const getProfile = helperAsync(async (req, res, next) => {
   const payload = req?.user;
