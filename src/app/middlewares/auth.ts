@@ -4,7 +4,6 @@ import HelperError from '../errors/HelperError';
 import { TUserRoles } from '../modules/User/user.interface';
 import helperAsync from '../utils/helperAsync';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { User } from '../modules/User/user.model';
 const auth = (...userRoles: TUserRoles[]) => {
   return helperAsync(async (req, res, next) => {
     const token = req.headers.authorization;
@@ -25,16 +24,12 @@ const auth = (...userRoles: TUserRoles[]) => {
         if (err) {
           throw new Error('You have no access to this route');
         }
+
         const role = (decoded as JwtPayload)?.user_role;
-        const userEmail = (decoded as JwtPayload)?.user_email;
         if (userRoles && !userRoles.includes(role)) {
           throw new Error('You have no access to this route');
         }
 
-        const user = await User.findOne({ email: userEmail });
-        if (!user) {
-          throw new Error('You have no access to this route');
-        }
         req.user = decoded as JwtPayload;
         next();
       },
