@@ -16,6 +16,9 @@ const login = async (payload: TAuth) => {
   if (!user) {
     throw new Error('Email not found');
   }
+  const validUser = await User.findOne({ email: email }).select(
+    '_id  name email phone address role',
+  );
   // checking password
   const hashedPassword = user?.password;
   if (!(await User.isValidPassword(password, hashedPassword))) {
@@ -43,7 +46,7 @@ const login = async (payload: TAuth) => {
   return {
     userAccessToken,
     userRefreshToken,
-    user,
+    validUser,
   };
 };
 const refreshToken = async (token: string) => {

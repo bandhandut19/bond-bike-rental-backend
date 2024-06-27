@@ -22,7 +22,7 @@ const signUp = helperAsync(async (req, res, next) => {
 const login = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const result = await UserServices.login(payload);
-  const { userRefreshToken, userAccessToken, user } = result;
+  const { userRefreshToken, userAccessToken, validUser } = result;
   res.cookie('refreshToken', userRefreshToken, {
     httpOnly: true,
     secure: config.NODE_ENV === 'production',
@@ -33,7 +33,7 @@ const login = helperAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     message: 'User logged in Successfully',
     token: userAccessToken,
-    data: user,
+    data: validUser,
   });
 
   // HelperResponse(res, {
