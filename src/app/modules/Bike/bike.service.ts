@@ -16,12 +16,12 @@ const createBikeIntoDB = async (payload: TBike, user: JwtPayload) => {
   return result;
 };
 
-const getAllBikesFromDB = async (payload: JwtPayload) => {
-  const { user_email } = payload;
-  const isUserExists = await User.findOne({ email: user_email });
-  if (!isUserExists) {
-    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
-  }
+const getAllBikesFromDB = async () => {
+  // const { user_email } = payload;
+  // const isUserExists = await User.findOne({ email: user_email });
+  // if (!isUserExists) {
+  //   throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  // }
   const result = await Bike.find();
   return result;
 };

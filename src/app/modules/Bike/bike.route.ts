@@ -14,7 +14,7 @@ router.post(
 );
 router.get(
   '/',
-  auth(UserRoles.ADMIN, UserRoles.USER),
+  // auth(UserRoles.ADMIN, UserRoles.USER),
   BikeControllers.getAllBikes,
 );
 router.put(

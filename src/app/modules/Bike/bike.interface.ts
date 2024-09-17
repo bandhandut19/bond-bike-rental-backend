@@ -2,6 +2,7 @@ import { Model, Types } from 'mongoose';
 
 export type TBike = {
   name: string;
+  image: string;
   description: string;
   pricePerHour: number;
   isAvailable: boolean;

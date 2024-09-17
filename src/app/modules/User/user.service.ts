@@ -14,7 +14,7 @@ const login = async (payload: TAuth) => {
   // checking is user is valid through checking email
   const user = await User.findOne({ email: email }).select('+password');
   if (!user) {
-    throw new Error('Email not found');
+    throw new HelperError(httpStatus.NOT_FOUND, 'User email not found');
   }
   const validUser = await User.findOne({ email: email }).select(
     '_id  name email phone address role',
