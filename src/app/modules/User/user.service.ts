@@ -87,6 +87,17 @@ const refreshToken = async (token: string) => {
 
   return userAccessToken;
 };
+const getAllUsersFromDB = async (payload: JwtPayload) => {
+  const { user_email: email } = payload;
+
+  const isUserExists = await User.findOne({ email: email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const users = await User.find();
+
+  return users;
+};
 const getProfileFromDB = async (payload: JwtPayload) => {
   const { user_email: email } = payload;
 
@@ -117,4 +128,5 @@ export const UserServices = {
   getProfileFromDB,
   updateProfileIntoDB,
   refreshToken,
+  getAllUsersFromDB,
 };

@@ -32,6 +32,7 @@ usersRouter.get(
   auth(UserRoles.ADMIN, UserRoles.USER),
   UserControllers.getProfile,
 );
+usersRouter.get('/users', auth(UserRoles.ADMIN), UserControllers.getAllUsers);
 usersRouter.put(
   '/me',
   auth(UserRoles.ADMIN, UserRoles.USER),

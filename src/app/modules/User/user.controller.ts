@@ -58,6 +58,19 @@ const getProfile = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const getAllUsers = helperAsync(async (req, res, next) => {
+  const payload = req?.user;
+  const result = await UserServices.getAllUsersFromDB(payload);
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.OK,
+    message: 'All Users retrived Successfully',
+    data: result,
+  });
+});
 
 const updateProfile = helperAsync(async (req, res, next) => {
   const updatedData = req.body;
@@ -90,4 +103,5 @@ export const UserControllers = {
   getProfile,
   updateProfile,
   refreshToken,
+  getAllUsers,
 };
