@@ -98,6 +98,17 @@ const getAllUsersFromDB = async (payload: JwtPayload) => {
 
   return users;
 };
+const deleteUserFromDB = async (payload: JwtPayload, id: string) => {
+  const { user_email: email } = payload;
+
+  const isUserExists = await User.findOne({ email: email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const users = await User.findByIdAndDelete(id);
+
+  return users;
+};
 const getProfileFromDB = async (payload: JwtPayload) => {
   const { user_email: email } = payload;
 
@@ -129,4 +140,5 @@ export const UserServices = {
   updateProfileIntoDB,
   refreshToken,
   getAllUsersFromDB,
+  deleteUserFromDB,
 };

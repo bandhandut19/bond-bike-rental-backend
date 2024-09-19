@@ -37,6 +37,7 @@ usersRouter.get(
   auth(UserRoles.ADMIN),
   UserControllers.getAllUsers,
 );
+usersRouter.delete('/:id', auth(UserRoles.ADMIN), UserControllers.deleteUser);
 usersRouter.put(
   '/me',
   auth(UserRoles.ADMIN, UserRoles.USER),

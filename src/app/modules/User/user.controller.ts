@@ -71,6 +71,20 @@ const getAllUsers = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const deleteUser = helperAsync(async (req, res, next) => {
+  const payload = req?.user;
+  const id = req?.params.id;
+  const result = await UserServices.deleteUserFromDB(payload, id);
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.OK,
+    message: 'User Deleted Successfully',
+    data: result,
+  });
+});
 
 const updateProfile = helperAsync(async (req, res, next) => {
   const updatedData = req.body;
@@ -104,4 +118,5 @@ export const UserControllers = {
   updateProfile,
   refreshToken,
   getAllUsers,
+  deleteUser,
 };
