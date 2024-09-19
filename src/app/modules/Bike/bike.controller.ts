@@ -64,8 +64,8 @@ const deleteBike = helperAsync(async (req, res, next) => {
 });
 const getSingleBike = helperAsync(async (req, res, next) => {
   const id = req?.params.id;
-  const user = req?.user;
-  const result = await BikeServices.getSingleBikeFromDB(id, user);
+  // const user = req?.user;
+  const result = await BikeServices.getSingleBikeFromDB(id);
   if (result === null) {
     return helperNoDataFound(res);
   }
