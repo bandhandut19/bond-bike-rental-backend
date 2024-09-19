@@ -62,10 +62,25 @@ const deleteBike = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const getSingleBike = helperAsync(async (req, res, next) => {
+  const id = req?.params.id;
+  const user = req?.user;
+  const result = await BikeServices.getSingleBikeFromDB(id, user);
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.OK,
+    message: 'Bike Retrived Successfully',
+    data: result,
+  });
+});
 
 export const BikeControllers = {
   createBike,
   getAllBikes,
   updateBike,
   deleteBike,
+  getSingleBike,
 };

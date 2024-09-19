@@ -17,6 +17,8 @@ router.get(
   // auth(UserRoles.ADMIN, UserRoles.USER),
   BikeControllers.getAllBikes,
 );
+
+router.get('/:id', BikeControllers.getSingleBike);
 router.put(
   '/:id',
   auth(UserRoles.ADMIN),

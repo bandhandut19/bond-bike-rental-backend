@@ -51,10 +51,20 @@ const deleteBikeFromDB = async (id: string, user: JwtPayload) => {
   const result = await Bike.findByIdAndDelete(id);
   return result;
 };
+const getSingleBikeFromDB = async (id: string, user: JwtPayload) => {
+  const { user_email } = user;
+  const isUserExists = await User.findOne({ email: user_email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const result = await Bike.findById(id);
+  return result;
+};
 
 export const BikeServices = {
   createBikeIntoDB,
   getAllBikesFromDB,
   updateBikeIntoDB,
   deleteBikeFromDB,
+  getSingleBikeFromDB,
 };
