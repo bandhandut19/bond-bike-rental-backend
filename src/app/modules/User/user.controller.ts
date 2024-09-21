@@ -100,6 +100,23 @@ const updateProfile = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const promoteUserToAdmin = helperAsync(async (req, res, next) => {
+  const userToBePromoted = req?.params.id;
+  const payload = req?.user;
+  const result = await UserServices.promoteUserToAdminRoleIntoDB(
+    userToBePromoted,
+    payload,
+  );
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.CREATED,
+    message: 'User Promoted To Admin Successfully',
+    data: result,
+  });
+});
 const refreshToken = helperAsync(async (req, res, next) => {
   const { refreshToken } = req.cookies;
   const result = await UserServices.refreshToken(refreshToken);
@@ -119,4 +136,5 @@ export const UserControllers = {
   refreshToken,
   getAllUsers,
   deleteUser,
+  promoteUserToAdmin,
 };

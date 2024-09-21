@@ -39,6 +39,11 @@ usersRouter.get(
 );
 usersRouter.delete('/:id', auth(UserRoles.ADMIN), UserControllers.deleteUser);
 usersRouter.put(
+  '/user/:id',
+  auth(UserRoles.ADMIN),
+  UserControllers.promoteUserToAdmin,
+);
+usersRouter.put(
   '/me',
   auth(UserRoles.ADMIN, UserRoles.USER),
   validate(UserValidations.updateUserValidationSchema),

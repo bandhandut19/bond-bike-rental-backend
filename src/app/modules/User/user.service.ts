@@ -133,6 +133,25 @@ const updateProfileIntoDB = async (updatedData: TUser, payload: JwtPayload) => {
   });
   return result;
 };
+const promoteUserToAdminRoleIntoDB = async (
+  id: string,
+  payload: JwtPayload,
+) => {
+  const { user_email: email } = payload;
+  const isUserExists = await User.findOne({ email: email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const result = await User.findByIdAndUpdate(
+    id,
+    { role: 'admin' },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+  return result;
+};
 export const UserServices = {
   signUp,
   login,
@@ -141,4 +160,5 @@ export const UserServices = {
   refreshToken,
   getAllUsersFromDB,
   deleteUserFromDB,
+  promoteUserToAdminRoleIntoDB,
 };
