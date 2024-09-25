@@ -8,3 +8,12 @@ export type TBooking = {
   totalCost: number;
   isReturned: boolean;
 };
+
+export type TPaymentDetails = {
+  userName: string;
+  userEmail: string;
+  userAddress: string;
+  userPhone: string;
+  amount: number;
+  transactionId: string;
+};

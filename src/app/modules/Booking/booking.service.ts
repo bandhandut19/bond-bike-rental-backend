@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JwtPayload } from 'jsonwebtoken';
-import { TBooking } from './booking.interface';
+import { TBooking, TPaymentDetails } from './booking.interface';
 import { Booking } from './booking.model';
 import { User } from '../User/user.model';
 import { startSession } from 'mongoose';
 import { Bike } from '../Bike/bike.model';
 import HelperError from '../../errors/HelperError';
 import httpStatus from 'http-status';
+import { PaymentUtils } from '../Payment/Payment.util';
 
 const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
   const session = await startSession();
@@ -39,27 +40,45 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
         'Bike is not available for rent! Currently rented out!!!',
       );
     }
-    // changing availability to false
-    const changeAvailablity = await Bike.findByIdAndUpdate(
-      isBikeExists,
-      {
-        isAvailable: false,
-      },
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    );
 
-    const userId = userData._id;
-    payload.userId = userId;
+    const advancePaymentAmount = 100;
+    const paymentDetails: TPaymentDetails = {
+      userName: userData?.name,
+      userEmail: userData?.email,
+      userAddress: userData?.address,
+      userPhone: userData?.phone,
+      amount: advancePaymentAmount,
+      transactionId: `${userData?.name}-${Date.now()}`,
+    };
+    const booking =
+      await PaymentUtils.initialBookingAdvancePayment(paymentDetails);
 
-    const result = await Booking.create([payload], { session });
+    if (booking?.success) {
+      // changing availability to false
+      const changeAvailablity = await Bike.findByIdAndUpdate(
+        isBikeExists,
+        {
+          isAvailable: false,
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
 
-    await session.commitTransaction();
-    await session.endSession();
-    return result;
+      const userId = userData._id;
+      payload.userId = userId;
+
+      const result = await Booking.create([payload], { session });
+
+      await session.commitTransaction();
+      await session.endSession();
+      return result;
+    } else {
+      const paymentFaild = 'Your Payment Faild';
+      return paymentFaild;
+    }
   } catch (err) {
     await session.abortTransaction();
     await session.endSession();
