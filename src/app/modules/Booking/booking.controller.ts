@@ -16,7 +16,7 @@ const createRental = helperAsync(async (req, res, next) => {
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,
-    message: 'Rental created successfully',
+    message: 'Bike Rental process started successfully',
     data: result,
   });
 });

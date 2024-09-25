@@ -9,12 +9,12 @@ const initialBookingAdvancePayment = async (
     store_id: config.STORE_ID,
     signature_key: config.SIGNATURE_KEY,
     tran_id: paymentDetails.transactionId,
-    success_url: 'http://localhost:5001/api/payment/bookingConfirmation',
+    success_url: `http://localhost:5001/api/payment/bookingConfirmation?transactionid=${paymentDetails?.transactionId}`,
     fail_url: 'http://www.merchantdomain.com/failedpage.html',
     cancel_url: 'http://www.merchantdomain.com/cancellpage.html',
     amount: paymentDetails.amount,
     currency: 'BDT',
-    desc: 'Merchant Registration Payment',
+    desc: 'Advance Payment for Bike Rent',
     cus_name: paymentDetails.userName,
     cus_email: paymentDetails.userEmail,
     cus_add1: paymentDetails.userAddress,
@@ -29,6 +29,20 @@ const initialBookingAdvancePayment = async (
   return res?.data;
 };
 
+const verifyAdvancePayment = async (transID: string) => {
+  const res = await axios.get(config.PAYMENT_VERIFY_URL!, {
+    params: {
+      request_id: transID,
+      store_id: config.STORE_ID,
+      signature_key: config.SIGNATURE_KEY,
+      type: 'json',
+    },
+  });
+
+  return res?.data;
+};
+
 export const PaymentUtils = {
   initialBookingAdvancePayment,
+  verifyAdvancePayment,
 };
