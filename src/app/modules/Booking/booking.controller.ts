@@ -9,9 +9,10 @@ const createRental = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const user = req.user;
   const result = await BookingServices.createRentalIntoDB(payload, user);
-  if (result.length <= 0) {
+  if (Object.keys(result).length === 0) {
     return helperNoDataFound(res);
   }
+
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,

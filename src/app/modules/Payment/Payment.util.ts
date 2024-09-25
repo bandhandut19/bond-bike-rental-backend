@@ -9,7 +9,7 @@ const initialBookingAdvancePayment = async (
     store_id: config.STORE_ID,
     signature_key: config.SIGNATURE_KEY,
     tran_id: paymentDetails.transactionId,
-    success_url: 'http://www.merchantdomain.com/sucesspage.html',
+    success_url: 'http://localhost:5001/api/payment/bookingConfirmation',
     fail_url: 'http://www.merchantdomain.com/failedpage.html',
     cancel_url: 'http://www.merchantdomain.com/cancellpage.html',
     amount: paymentDetails.amount,

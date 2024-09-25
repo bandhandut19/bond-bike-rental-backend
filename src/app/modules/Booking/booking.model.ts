@@ -28,6 +28,14 @@ const bookingSchema = new Schema<TBooking>(
       type: Boolean,
       default: false,
     },
+    advancePayment: {
+      type: Boolean,
+      default: false,
+    },
+    transactionID: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

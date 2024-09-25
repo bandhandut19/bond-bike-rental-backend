@@ -42,43 +42,44 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     }
 
     const advancePaymentAmount = 100;
+    const transactionPrefix = userData?.email.split('@');
     const paymentDetails: TPaymentDetails = {
       userName: userData?.name,
       userEmail: userData?.email,
       userAddress: userData?.address,
       userPhone: userData?.phone,
       amount: advancePaymentAmount,
-      transactionId: `${userData?.name}-${Date.now()}`,
+      // as here i have set the emails unique earlier.so transID with email&date will be unique too.
+      transactionId: `${transactionPrefix[0]}-${Date.now()}`,
     };
     const booking =
       await PaymentUtils.initialBookingAdvancePayment(paymentDetails);
 
-    if (booking?.success) {
-      // changing availability to false
-      const changeAvailablity = await Bike.findByIdAndUpdate(
-        isBikeExists,
-        {
-          isAvailable: false,
-        },
-        {
-          new: true,
-          runValidators: true,
-          session,
-        },
-      );
+    // changing availability to false
+    // const changeAvailablity = await Bike.findByIdAndUpdate(
+    //   isBikeExists,
+    //   {
+    //     isAvailable: false,
+    //   },
+    //   {
+    //     new: true,
+    //     runValidators: true,
+    //     session,
+    //   },
+    // );
 
-      const userId = userData._id;
-      payload.userId = userId;
+    const userId = userData._id;
+    payload.userId = userId;
+    payload.transactionID = paymentDetails?.transactionId;
+    const result = await Booking.create([payload], { session });
 
-      const result = await Booking.create([payload], { session });
-
-      await session.commitTransaction();
-      await session.endSession();
-      return result;
-    } else {
-      const paymentFaild = 'Your Payment Faild';
-      return paymentFaild;
-    }
+    await session.commitTransaction();
+    await session.endSession();
+    const detailedResult = {
+      result,
+      booking,
+    };
+    return detailedResult;
   } catch (err) {
     await session.abortTransaction();
     await session.endSession();
