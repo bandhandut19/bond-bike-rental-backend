@@ -14,7 +14,6 @@ const bookingConfirm = async (transID: string, status: string) => {
     // will be deleted from database in failed payment page
     // this is success payment working
     const booking = await Booking.findOne({ transactionID: transID });
-    console.log(booking);
     const verifyAdvancePay = await PaymentUtils.verifyAdvancePayment(transID);
     if (
       verifyAdvancePay &&

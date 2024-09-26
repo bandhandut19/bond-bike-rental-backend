@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bond Bike Rental | Payment Status</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1A4862;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .payment-container {
+            background-color: #D7DFA3;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .payment-container h1 {
+            font-size: 24px;
+            color: #1A4862;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .payment-status {
+            font-size: 20px;
+            color: green;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .details {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            background-color: #1A4862;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button-container button:hover {
+            background-color: #155072;
+        }
+
+        @media (max-width: 768px) {
+            .payment-container {
+                padding: 15px;
+            }
+
+            .payment-container h1 {
+                font-size: 22px;
+            }
+
+            .payment-status {
+                font-size: 18px;
+            }
+
+            .details {
+                font-size: 14px;
+            }
+
+            .button-container button {
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-container h1 {
+                font-size: 20px;
+            }
+
+            .payment-status {
+                font-size: 16px;
+            }
+
+            .details {
+                font-size: 13px;
+            }
+
+            .button-container button {
+                padding: 7px 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="payment-container">
+        <h1>Payment {{status}}</h1>
+        <p class="payment-status">{{messageOne}}</p>
+        <p class="details">{{messageTow}}<br>{{messageThree}}</p>
+        <div class="button-container">
+            <button onclick="window.location.href='http://localhost:5173'">Go to Home</button>
+        </div>
+    </div>
+</body>
+
+</html>

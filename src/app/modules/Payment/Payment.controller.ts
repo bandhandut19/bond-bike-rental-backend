@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import httpStatus from 'http-status';
 import helperAsync from '../../utils/helperAsync';
 import helperNoDataFound from '../../utils/helperNoDataFound';
-import HelperResponse from '../../utils/helperResponse';
 import { PaymentServices } from './Payment.service';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const bookingConfirm = helperAsync(async (req, res, next) => {
   const { transactionid, status } = req.query;
@@ -14,9 +14,43 @@ const bookingConfirm = helperAsync(async (req, res, next) => {
   if (result === null) {
     return helperNoDataFound(res);
   }
-  res.send(
-    `<h1>Payment ${status}</h1> <br> <a href="http://localhost:5173/">Go to Home</a>`,
+
+  const filePath = join(__dirname, '../../views/PaymentPage.html');
+  let advancePaymentTemplate = readFileSync(filePath, 'utf-8');
+  advancePaymentTemplate = advancePaymentTemplate.replace(
+    '{{status}}',
+    status as string,
   );
+  if (status === 'success') {
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageOne}}',
+      `Your Advance Payment for bike booking was Successful`,
+    );
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageTow}}',
+      `TransactionID: ${transactionid}`,
+    );
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageThree}}',
+      `Advance Payment Amount: 100 BDT Only`,
+    );
+  }
+  if (status === 'failed') {
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageOne}}',
+      `Your Advance Payment for bike booking was Unsuccessful`,
+    );
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageTow}}',
+      `N/A`,
+    );
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageThree}}',
+      `Advance Payment Amount: N/A`,
+    );
+  }
+
+  res.send(advancePaymentTemplate);
 });
 
 export const paymentControllers = {
