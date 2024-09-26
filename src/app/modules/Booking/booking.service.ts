@@ -54,7 +54,7 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     };
     const booking =
       await PaymentUtils.initialBookingAdvancePayment(paymentDetails);
-
+    console.log(booking);
     const userId = userData._id;
     payload.userId = userId;
     payload.transactionID = paymentDetails?.transactionId;
