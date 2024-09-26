@@ -55,28 +55,15 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     const booking =
       await PaymentUtils.initialBookingAdvancePayment(paymentDetails);
 
-    // changing availability to false
-    // const changeAvailablity = await Bike.findByIdAndUpdate(
-    //   isBikeExists,
-    //   {
-    //     isAvailable: false,
-    //   },
-    //   {
-    //     new: true,
-    //     runValidators: true,
-    //     session,
-    //   },
-    // );
-
     const userId = userData._id;
     payload.userId = userId;
     payload.transactionID = paymentDetails?.transactionId;
-    // const result = await Booking.create([payload], { session });
+    const result = await Booking.create([payload], { session });
 
     await session.commitTransaction();
     await session.endSession();
     const detailedResult = {
-      // result,
+      result,
       booking,
     };
     return detailedResult;

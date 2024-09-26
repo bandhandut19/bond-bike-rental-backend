@@ -4,11 +4,11 @@ export type TBooking = {
   userId: Types.ObjectId;
   bikeId: Types.ObjectId;
   startTime: string;
+  transactionID: string;
   returnTime: string;
   totalCost: number;
   isReturned: boolean;
   advancePayment: boolean;
-  transactionID: string;
 };
 
 export type TPaymentDetails = {

@@ -7,17 +7,15 @@ import { PaymentServices } from './Payment.service';
 
 const bookingConfirm = helperAsync(async (req, res, next) => {
   const transactionID = req.query.transactionid;
-  const payload = req.body;
-  const user = req.user;
-  const result = await PaymentServices.bookingConfirm(
-    transactionID as string,
-    payload,
-    user,
-  );
+
+  const result = await PaymentServices.bookingConfirm(transactionID as string);
   if (result === null) {
     return helperNoDataFound(res);
   }
-  res.send(`<h1>Payment Success</h1>`);
+  res.send(
+    `<h1>Payment Success</h1> <br> <a href="http://localhost:5173/">Go to Home</a>`,
+  );
+
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,
