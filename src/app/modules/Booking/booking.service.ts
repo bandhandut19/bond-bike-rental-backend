@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JwtPayload } from 'jsonwebtoken';
-import { TBooking, TPaymentDetails } from './booking.interface';
+import { TBooking, TCalculate, TPaymentDetails } from './booking.interface';
 import { Booking } from './booking.model';
 import { User } from '../User/user.model';
 import { startSession } from 'mongoose';
@@ -138,6 +138,61 @@ const returnBikeIntoDB = async (id: string, user: JwtPayload) => {
     throw err;
   }
 };
+const setTotalCostOfSpecificUserIntoDB = async (
+  payload: TCalculate,
+  user: JwtPayload,
+) => {
+  const { user_email } = user;
+  const { bookingId, bikeReturnTime } = payload;
+  const isUserExists = await User.findOne({ email: user_email });
+  if (!isUserExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const session = await startSession();
+  try {
+    session.startTransaction();
+    const isBookingExists = await Booking.findById(bookingId).session(session);
+    if (!isBookingExists) {
+      throw new HelperError(httpStatus.NOT_FOUND, 'Booking not found');
+    }
+    const isBikeExists = await Bike.findById(isBookingExists?.bikeId).session(
+      session,
+    );
+    if (!isBikeExists) {
+      throw new Error('Bike not found');
+    }
+    //CALCULATING TOTAL COST
+    const returnTime = bikeReturnTime;
+    const startTime = isBookingExists?.startTime as string;
+    const pricePerHour = isBikeExists?.pricePerHour;
+    const totalRentHour =
+      (new Date(returnTime).getTime() - new Date(startTime).getTime()) /
+      (1000 * 60 * 60);
+
+    const totalCost = Number((pricePerHour * totalRentHour).toFixed(2));
+
+    const updateBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      {
+        returnTime: returnTime,
+        totalCost: totalCost,
+      },
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
+
+    await session.commitTransaction();
+    await session.endSession();
+    return updateBooking;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw err;
+  }
+};
 
 const getAllRentalsFromDB = async (user: JwtPayload) => {
   const { user_email } = user;
@@ -151,8 +206,22 @@ const getAllRentalsFromDB = async (user: JwtPayload) => {
   }
   return userRentals;
 };
+const getOverAllRentalsFromDB = async (user: JwtPayload) => {
+  const { user_email } = user;
+  const isUserExists = await User.findOne({ email: user_email });
+  if (!isUserExists) {
+    throw new Error('User not found');
+  }
+  const userRentals = await Booking.find();
+  if (userRentals.length <= 0) {
+    throw new Error('No users rentals data found');
+  }
+  return userRentals;
+};
 export const BookingServices = {
   createRentalIntoDB,
   returnBikeIntoDB,
   getAllRentalsFromDB,
+  getOverAllRentalsFromDB,
+  setTotalCostOfSpecificUserIntoDB,
 };

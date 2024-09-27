@@ -47,9 +47,39 @@ const myRentals = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
+const allRentals = helperAsync(async (req, res, next) => {
+  const user = req.user;
+  const result = await BookingServices.getOverAllRentalsFromDB(user);
+  if (result.length <= 0) {
+    return helperNoDataFound(res);
+  }
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.OK,
+    message: 'All users Rentals retrived successfully',
+    data: result,
+  });
+});
+const calculateCost = helperAsync(async (req, res, next) => {
+  const payload = req.body;
+  const user = req.user;
+  const result = await BookingServices.setTotalCostOfSpecificUserIntoDB(
+    payload,
+    user,
+  );
+
+  HelperResponse(res, {
+    success: true,
+    stausCode: httpStatus.OK,
+    message: 'All users Rentals retrived successfully',
+    data: result,
+  });
+});
 
 export const BookingControllers = {
   createRental,
   returnBike,
   myRentals,
+  allRentals,
+  calculateCost,
 };

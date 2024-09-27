@@ -19,3 +19,8 @@ export type TPaymentDetails = {
   amount: number;
   transactionId: string;
 };
+
+export type TCalculate = {
+  bookingId: string;
+  bikeReturnTime: string;
+};

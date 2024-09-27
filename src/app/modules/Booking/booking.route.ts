@@ -14,10 +14,16 @@ router.post(
 );
 
 router.put('/:id/return', auth(UserRoles.ADMIN), BookingControllers.returnBike);
+router.patch(
+  '/calculate',
+  auth(UserRoles.ADMIN),
+  BookingControllers.calculateCost,
+);
 router.get(
   '/',
   auth(UserRoles.USER, UserRoles.ADMIN),
   BookingControllers.myRentals,
 );
+router.get('/all', auth(UserRoles.ADMIN), BookingControllers.allRentals);
 
 export const BookingRoutes = router;
