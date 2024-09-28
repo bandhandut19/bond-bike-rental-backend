@@ -60,7 +60,7 @@ const allRentals = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
-const calculateCost = helperAsync(async (req, res, next) => {
+const returnBikeAndCalculateCost = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const user = req.user;
   const result = await BookingServices.setTotalCostOfSpecificUserIntoDB(
@@ -81,5 +81,5 @@ export const BookingControllers = {
   returnBike,
   myRentals,
   allRentals,
-  calculateCost,
+  returnBikeAndCalculateCost,
 };

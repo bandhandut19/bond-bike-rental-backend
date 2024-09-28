@@ -17,7 +17,7 @@ router.put('/:id/return', auth(UserRoles.ADMIN), BookingControllers.returnBike);
 router.patch(
   '/calculate',
   auth(UserRoles.ADMIN),
-  BookingControllers.calculateCost,
+  BookingControllers.returnBikeAndCalculateCost,
 );
 router.get(
   '/',
