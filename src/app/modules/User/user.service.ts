@@ -22,7 +22,7 @@ const login = async (payload: TAuth) => {
   // checking password
   const hashedPassword = user?.password;
   if (!(await User.isValidPassword(password, hashedPassword))) {
-    throw new Error('Password is incorrect1');
+    throw new Error('Password is incorrect');
   }
 
   const jwtPayload = {

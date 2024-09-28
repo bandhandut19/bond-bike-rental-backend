@@ -17,7 +17,7 @@ authRouter.post(
   validate(AuthValidations.loginValidationSchema),
   UserControllers.login,
 );
-authRouter.post(
+authRouter.get(
   '/refresh-token',
   validate(AuthValidations.refreshTokenValidationSchema),
   UserControllers.refreshToken,
