@@ -36,6 +36,10 @@ const bookingSchema = new Schema<TBooking>(
       type: String,
       required: true,
     },
+    payment: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

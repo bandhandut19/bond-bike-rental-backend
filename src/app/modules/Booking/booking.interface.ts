@@ -11,6 +11,7 @@ export type TBooking = {
   totalCost?: number;
   isReturned?: boolean;
   advancePayment?: boolean;
+  payment?: boolean;
 };
 
 export type TPaymentDetails = {

@@ -162,6 +162,18 @@ const setTotalCostOfSpecificUserIntoDB = async (
     if (!isBikeExists) {
       throw new Error('Bike not found');
     }
+    // changing bike availability
+    const changeAvailability = await Bike.findByIdAndUpdate(
+      isBikeExists,
+      {
+        isAvailable: true,
+      },
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
     //CALCULATING TOTAL COST
     const initialreturnTime = new Date(bikeReturnTime);
     const formattedReturnTime =
@@ -182,6 +194,7 @@ const setTotalCostOfSpecificUserIntoDB = async (
       {
         returnTime: formattedReturnTime,
         totalCost: totalCost,
+        isReturned: true,
       },
       {
         new: true,
