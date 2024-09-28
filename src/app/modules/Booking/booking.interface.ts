@@ -7,6 +7,7 @@ export type TBooking = {
   bikeId: Types.ObjectId;
   startTime: string;
   transactionID: string;
+  rentalTransactionID?: string;
   returnTime?: string;
   totalCost?: number;
   isReturned?: boolean;
@@ -23,7 +24,12 @@ export type TPaymentDetails = {
   transactionId: string;
   startTime: string;
 };
-
+export type TRentalpaymentDetails = {
+  user: TUser;
+  bookingId: string;
+  amount: number;
+  transactionId: string;
+};
 export type TCalculate = {
   bookingId: string;
   bikeReturnTime: string;

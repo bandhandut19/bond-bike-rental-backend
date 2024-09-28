@@ -52,24 +52,59 @@ const bookingConfirm = helperAsync(async (req, res, next) => {
       `Advance Payment Amount: N/A`,
     );
   }
-  if (status === 'cancelled') {
-    advancePaymentTemplate = advancePaymentTemplate.replace(
+
+  res.send(advancePaymentTemplate);
+});
+const rentalPaymentConfim = helperAsync(async (req, res, next) => {
+  const { transactionid, status, booking, amount } = req.query;
+  const result = await PaymentServices.rentalPaymentConfirm(
+    transactionid as string,
+    booking as string,
+    status as string,
+  );
+  if (result === null) {
+    return helperNoDataFound(res);
+  }
+
+  const filePath = join(__dirname, '../../views/PaymentPage.html');
+  let rentalPaymentTemplate = readFileSync(filePath, 'utf-8');
+  rentalPaymentTemplate = rentalPaymentTemplate.replace(
+    '{{status}}',
+    status as string,
+  );
+  if (status === 'success') {
+    rentalPaymentTemplate = rentalPaymentTemplate.replace(
       '{{messageOne}}',
-      `Your Advance Payment for bike booking was Cancelled`,
+      `Your Payment for bike rental was Successful`,
     );
-    advancePaymentTemplate = advancePaymentTemplate.replace(
+    rentalPaymentTemplate = rentalPaymentTemplate.replace(
+      '{{messageTow}}',
+      `TransactionID: ${transactionid}`,
+    );
+    rentalPaymentTemplate = rentalPaymentTemplate.replace(
+      '{{messageThree}}',
+      `Payment Amount: ${amount} BDT Only`,
+    );
+  }
+  if (status === 'failed') {
+    rentalPaymentTemplate = rentalPaymentTemplate.replace(
+      '{{messageOne}}',
+      `Your Payment for bike rental was Unsuccessful`,
+    );
+    rentalPaymentTemplate = rentalPaymentTemplate.replace(
       '{{messageTow}}',
       `N/A`,
     );
-    advancePaymentTemplate = advancePaymentTemplate.replace(
+    rentalPaymentTemplate = rentalPaymentTemplate.replace(
       '{{messageThree}}',
-      `Advance Payment Amount: N/A`,
+      `Payment Amount: N/A`,
     );
   }
 
-  res.send(advancePaymentTemplate);
+  res.send(rentalPaymentTemplate);
 });
 
 export const paymentControllers = {
   bookingConfirm,
+  rentalPaymentConfim,
 };

@@ -13,7 +13,12 @@ router.post(
   BookingControllers.createRental,
 );
 
-router.put('/:id/return', auth(UserRoles.ADMIN), BookingControllers.returnBike);
+router.post(
+  '/:bookingId/payRental/:amount',
+  auth(UserRoles.ADMIN, UserRoles.USER),
+  BookingControllers.payRental,
+);
+//only admin can calculate
 router.patch(
   '/calculate',
   auth(UserRoles.ADMIN),
@@ -24,6 +29,7 @@ router.get(
   auth(UserRoles.USER, UserRoles.ADMIN),
   BookingControllers.myRentals,
 );
+// only admin can retrive all rentals
 router.get('/all', auth(UserRoles.ADMIN), BookingControllers.allRentals);
 
 export const BookingRoutes = router;

@@ -18,7 +18,7 @@ const bookingConfirm = async (
   try {
     session.startTransaction();
     // verifying payment, then changing bike availablity and advance-payment status
-    const verifyAdvancePay = await PaymentUtils.verifyAdvancePayment(transID);
+    const verifyAdvancePay = await PaymentUtils.verifyPayment(transID);
     if (
       verifyAdvancePay &&
       verifyAdvancePay.pay_status === 'Successful' &&
@@ -68,7 +68,53 @@ const bookingConfirm = async (
     throw err;
   }
 };
+const rentalPaymentConfirm = async (
+  transID: string,
+  booking: string,
+  status: string,
+) => {
+  const session = await startSession();
+  try {
+    session.startTransaction();
+    // verifying payment, then changing payment status
+    const verifyRentalPay = await PaymentUtils.verifyPayment(transID);
+    if (
+      verifyRentalPay &&
+      verifyRentalPay.pay_status === 'Successful' &&
+      status === 'success'
+    ) {
+      // getting booking
+      const bookingDB = await Booking.findById(booking).session(session);
+      if (!bookingDB) {
+        throw new Error('Bike not found');
+      }
+      const bookingDBId = bookingDB?._id;
+      //  changing availability to false
+      const changingPaymentStatus = await Booking.findByIdAndUpdate(
+        bookingDBId,
+        {
+          rentalTransactionID: transID,
+          payment: true,
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+
+      await session.commitTransaction();
+      await session.endSession();
+      return changingPaymentStatus;
+    }
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw err;
+  }
+};
 
 export const PaymentServices = {
   bookingConfirm,
+  rentalPaymentConfirm,
 };

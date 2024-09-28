@@ -1,7 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JwtPayload } from 'jsonwebtoken';
-import { TBooking, TCalculate, TPaymentDetails } from './booking.interface';
+import {
+  TBooking,
+  TCalculate,
+  TPaymentDetails,
+  TRentalpaymentDetails,
+} from './booking.interface';
 import { Booking } from './booking.model';
 import { User } from '../User/user.model';
 import { startSession } from 'mongoose';
@@ -27,7 +32,6 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
       throw new Error('User not found');
     }
 
-    // const isBikeExists = await Bike.isBikeExists(bikeId);
     const isBikeExists = await Bike.findById(bikeId).session(session);
     if (!isBikeExists) {
       throw new HelperError(httpStatus.NOT_FOUND, 'Bike not found');
@@ -55,16 +59,12 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     };
     const booking =
       await PaymentUtils.initialBookingAdvancePayment(paymentDetails);
-    console.log(booking);
     const userId = userData._id;
     payload.userId = userId;
     payload.transactionID = paymentDetails?.transactionId;
-    // const result = await Booking.create([payload], { session });
-
     await session.commitTransaction();
     await session.endSession();
     const detailedResult = {
-      // result,
       booking,
     };
     return detailedResult;
@@ -75,64 +75,42 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
   }
 };
 
-const returnBikeIntoDB = async (id: string, user: JwtPayload) => {
+const payRentalOfBikeIntoDB = async (
+  amount: number,
+  bookingId: string,
+  user: JwtPayload,
+) => {
+  // user-verification
   const { user_email } = user;
-  const isUserExists = await User.findOne({ email: user_email });
-  if (!isUserExists) {
-    throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
+
+  //....
+
+  // booking-verification
+  const isBookingExists = await Booking.findById(bookingId);
+  if (!isBookingExists) {
+    throw new HelperError(httpStatus.NOT_FOUND, 'Booking not found');
   }
+  //....
   const session = await startSession();
   try {
     session.startTransaction();
-    const isBikeExists = await Bike.findById(id).session(session);
-    if (!isBikeExists) {
-      throw new Error('Bike not found');
+
+    const userData = await User.findOne({ email: user_email }).session(session);
+    if (!userData) {
+      throw new Error('User not found');
     }
-    const changeAvailability = await Bike.findByIdAndUpdate(
-      isBikeExists,
-      {
-        isAvailable: true,
-      },
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    );
-    const bookedBike = await Booking.findOne({ bikeId: id }).session(session);
-
-    const isReturnedPreviously = bookedBike?.isReturned;
-    if (isReturnedPreviously) {
-      throw new Error('Bike is already returned');
-    }
-
-    //CALCULATING TOTAL COST
-    const returnTime = new Date().toISOString();
-    const startTime = bookedBike?.startTime as string;
-    const pricePerHour = isBikeExists?.pricePerHour;
-    const totalRentHour =
-      (new Date(returnTime).getTime() - new Date(startTime).getTime()) /
-      (1000 * 60 * 60);
-
-    const totalCost = Number((pricePerHour * totalRentHour).toFixed(2));
-
-    const updateBooking = await Booking.findByIdAndUpdate(
-      bookedBike,
-      {
-        returnTime: returnTime,
-        totalCost: totalCost,
-        isReturned: true,
-      },
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    );
-
+    const transactionPrefix = userData?.email.split('@');
+    const paymentDetails: TRentalpaymentDetails = {
+      user: userData,
+      bookingId,
+      amount,
+      transactionId: `${transactionPrefix[0]}-${Date.now()}`,
+    };
+    console.log(paymentDetails);
+    const payRental = await PaymentUtils.rentalPayment(paymentDetails);
     await session.commitTransaction();
     await session.endSession();
-    return updateBooking;
+    return payRental;
   } catch (err) {
     await session.abortTransaction();
     await session.endSession();
@@ -178,9 +156,9 @@ const setTotalCostOfSpecificUserAndReturnBikeIntoDB = async (
     const initialreturnTime = new Date(bikeReturnTime);
     const formattedReturnTime =
       initialreturnTime.toISOString().slice(0, 19) + 'Z';
-    console.log('return', formattedReturnTime);
+
     const startTime = isBookingExists?.startTime as string;
-    console.log('start', startTime);
+
     const pricePerHour = isBikeExists?.pricePerHour;
     const totalRentHour =
       (new Date(formattedReturnTime).getTime() -
@@ -239,7 +217,7 @@ const getOverAllRentalsFromDB = async (user: JwtPayload) => {
 };
 export const BookingServices = {
   createRentalIntoDB,
-  returnBikeIntoDB,
+  payRentalOfBikeIntoDB,
   getAllRentalsFromDB,
   getOverAllRentalsFromDB,
   setTotalCostOfSpecificUserAndReturnBikeIntoDB,

@@ -20,17 +20,23 @@ const createRental = helperAsync(async (req, res, next) => {
     data: result,
   });
 });
-const returnBike = helperAsync(async (req, res, next) => {
-  const id = req.params.id;
+const payRental = helperAsync(async (req, res, next) => {
+  const bookingId = req.params.bookingId;
+  const amount = req.params.amount;
+  console.log('bodyy', amount);
   const user = req.user;
-  const result = await BookingServices.returnBikeIntoDB(id, user);
+  const result = await BookingServices.payRentalOfBikeIntoDB(
+    parseInt(amount),
+    bookingId,
+    user,
+  );
   if (result === null) {
     return helperNoDataFound(res);
   }
   HelperResponse(res, {
     success: true,
     stausCode: httpStatus.OK,
-    message: 'Bike Returned successfully',
+    message: 'Rental Payment started....',
     data: result,
   });
 });
@@ -79,7 +85,7 @@ const returnBikeAndCalculateCost = helperAsync(async (req, res, next) => {
 
 export const BookingControllers = {
   createRental,
-  returnBike,
+  payRental,
   myRentals,
   allRentals,
   returnBikeAndCalculateCost,

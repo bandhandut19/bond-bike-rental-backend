@@ -36,6 +36,10 @@ const bookingSchema = new Schema<TBooking>(
       type: String,
       required: true,
     },
+    rentalTransactionID: {
+      type: String,
+      default: '',
+    },
     payment: {
       type: Boolean,
       default: false,
