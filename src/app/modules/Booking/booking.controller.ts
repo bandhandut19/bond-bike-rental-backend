@@ -63,10 +63,11 @@ const allRentals = helperAsync(async (req, res, next) => {
 const returnBikeAndCalculateCost = helperAsync(async (req, res, next) => {
   const payload = req.body;
   const user = req.user;
-  const result = await BookingServices.setTotalCostOfSpecificUserIntoDB(
-    payload,
-    user,
-  );
+  const result =
+    await BookingServices.setTotalCostOfSpecificUserAndReturnBikeIntoDB(
+      payload,
+      user,
+    );
 
   HelperResponse(res, {
     success: true,

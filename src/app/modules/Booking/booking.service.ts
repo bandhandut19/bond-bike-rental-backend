@@ -139,7 +139,7 @@ const returnBikeIntoDB = async (id: string, user: JwtPayload) => {
     throw err;
   }
 };
-const setTotalCostOfSpecificUserIntoDB = async (
+const setTotalCostOfSpecificUserAndReturnBikeIntoDB = async (
   payload: TCalculate,
   user: JwtPayload,
 ) => {
@@ -242,5 +242,5 @@ export const BookingServices = {
   returnBikeIntoDB,
   getAllRentalsFromDB,
   getOverAllRentalsFromDB,
-  setTotalCostOfSpecificUserIntoDB,
+  setTotalCostOfSpecificUserAndReturnBikeIntoDB,
 };
