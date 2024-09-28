@@ -6,10 +6,13 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 const bookingConfirm = helperAsync(async (req, res, next) => {
-  const { transactionid, status } = req.query;
+  const { transactionid, status, user, bike, time } = req.query;
   const result = await PaymentServices.bookingConfirm(
     transactionid as string,
     status as string,
+    user as string,
+    bike as string,
+    time as string,
   );
   if (result === null) {
     return helperNoDataFound(res);
@@ -39,6 +42,20 @@ const bookingConfirm = helperAsync(async (req, res, next) => {
     advancePaymentTemplate = advancePaymentTemplate.replace(
       '{{messageOne}}',
       `Your Advance Payment for bike booking was Unsuccessful`,
+    );
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageTow}}',
+      `N/A`,
+    );
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageThree}}',
+      `Advance Payment Amount: N/A`,
+    );
+  }
+  if (status === 'cancelled') {
+    advancePaymentTemplate = advancePaymentTemplate.replace(
+      '{{messageOne}}',
+      `Your Advance Payment for bike booking was Cancelled`,
     );
     advancePaymentTemplate = advancePaymentTemplate.replace(
       '{{messageTow}}',

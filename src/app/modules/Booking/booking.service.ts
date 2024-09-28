@@ -12,7 +12,7 @@ import { PaymentUtils } from '../Payment/Payment.util';
 
 const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
   const session = await startSession();
-  const { bikeId } = payload;
+  const { bikeId, startTime } = payload;
 
   try {
     session.startTransaction();
@@ -44,10 +44,11 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     const advancePaymentAmount = 100;
     const transactionPrefix = userData?.email.split('@');
     const paymentDetails: TPaymentDetails = {
-      userName: userData?.name,
-      userEmail: userData?.email,
+      user: userData,
+      bike: isBikeExists,
       userAddress: userData?.address,
       userPhone: userData?.phone,
+      startTime: startTime,
       amount: advancePaymentAmount,
       // as here i have set the emails unique earlier.so transID with email&date will be unique too.
       transactionId: `${transactionPrefix[0]}-${Date.now()}`,
@@ -58,12 +59,12 @@ const createRentalIntoDB = async (payload: TBooking, user: JwtPayload) => {
     const userId = userData._id;
     payload.userId = userId;
     payload.transactionID = paymentDetails?.transactionId;
-    const result = await Booking.create([payload], { session });
+    // const result = await Booking.create([payload], { session });
 
     await session.commitTransaction();
     await session.endSession();
     const detailedResult = {
-      result,
+      // result,
       booking,
     };
     return detailedResult;
@@ -162,19 +163,24 @@ const setTotalCostOfSpecificUserIntoDB = async (
       throw new Error('Bike not found');
     }
     //CALCULATING TOTAL COST
-    const returnTime = bikeReturnTime;
+    const initialreturnTime = new Date(bikeReturnTime);
+    const formattedReturnTime =
+      initialreturnTime.toISOString().slice(0, 19) + 'Z';
+    console.log('return', formattedReturnTime);
     const startTime = isBookingExists?.startTime as string;
+    console.log('start', startTime);
     const pricePerHour = isBikeExists?.pricePerHour;
     const totalRentHour =
-      (new Date(returnTime).getTime() - new Date(startTime).getTime()) /
+      (new Date(formattedReturnTime).getTime() -
+        new Date(startTime).getTime()) /
       (1000 * 60 * 60);
-
+    console.log(totalRentHour);
     const totalCost = Number((pricePerHour * totalRentHour).toFixed(2));
 
     const updateBooking = await Booking.findByIdAndUpdate(
       bookingId,
       {
-        returnTime: returnTime,
+        returnTime: formattedReturnTime,
         totalCost: totalCost,
       },
       {

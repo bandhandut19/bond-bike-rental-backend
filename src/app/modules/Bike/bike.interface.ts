@@ -1,6 +1,7 @@
 import { Model, Types } from 'mongoose';
 
 export type TBike = {
+  _id?: Types.ObjectId;
   name: string;
   image: string;
   description: string;
