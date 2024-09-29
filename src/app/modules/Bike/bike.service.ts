@@ -34,7 +34,7 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
     if (query.searchByBrand) {
       filterQuery.brand = {
         $regex: query.searchByBrand as string,
-        options: 'i',
+        $options: 'i',
       };
     }
     if (query.searchByModel) {
