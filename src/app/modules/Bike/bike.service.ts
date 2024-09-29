@@ -16,14 +16,40 @@ const createBikeIntoDB = async (payload: TBike, user: JwtPayload) => {
   return result;
 };
 
-const getAllBikesFromDB = async () => {
+const getAllBikesFromDB = async (query: Record<string, unknown>) => {
+  const filterQuery: Record<string, unknown> = {};
   // const { user_email } = payload;
   // const isUserExists = await User.findOne({ email: user_email });
   // if (!isUserExists) {
   //   throw new HelperError(httpStatus.NOT_FOUND, 'User not found');
   // }
-  const result = await Bike.find();
-  return result;
+
+  try {
+    if (query.searchByName) {
+      filterQuery.name = {
+        $regex: query.searchByName as string,
+        $options: 'i',
+      };
+    }
+    if (query.searchByBrand) {
+      filterQuery.brand = {
+        $regex: query.searchByBrand as string,
+        options: 'i',
+      };
+    }
+    if (query.searchByModel) {
+      filterQuery.model = {
+        $regex: query.searchByModel as string,
+        options: 'i',
+      };
+    }
+
+    const result = await Bike.find(filterQuery);
+    return result;
+  } catch (error) {
+    // Handle error appropriately (e.g., log it, rethrow it, etc.)
+    throw new Error('Error fetching bikes:');
+  }
 };
 
 const updateBikeIntoDB = async (

@@ -22,7 +22,7 @@ const createBike = helperAsync(async (req, res, next) => {
 
 const getAllBikes = helperAsync(async (req, res, next) => {
   // const payload = req.user;
-  const result = await BikeServices.getAllBikesFromDB();
+  const result = await BikeServices.getAllBikesFromDB(req.query);
   if (result.length <= 0) {
     return helperNoDataFound(res);
   }
