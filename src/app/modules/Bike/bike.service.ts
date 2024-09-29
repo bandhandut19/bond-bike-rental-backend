@@ -18,6 +18,7 @@ const createBikeIntoDB = async (payload: TBike, user: JwtPayload) => {
 
 const getAllBikesFromDB = async (query: Record<string, unknown>) => {
   const filterQuery: Record<string, unknown> = {};
+  console.log(filterQuery);
   // const { user_email } = payload;
   // const isUserExists = await User.findOne({ email: user_email });
   // if (!isUserExists) {
@@ -40,8 +41,16 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
     if (query.searchByModel) {
       filterQuery.model = {
         $regex: query.searchByModel as string,
-        options: 'i',
+        $options: 'i',
       };
+    }
+    if (query.searchByAvailability) {
+      if (query.searchByAvailability === 'Available') {
+        filterQuery.isAvailable = true;
+      }
+      if (query.searchByAvailability === 'Not Available') {
+        filterQuery.isAvailable = false;
+      }
     }
 
     const result = await Bike.find(filterQuery);
