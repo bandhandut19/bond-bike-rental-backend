@@ -44,6 +44,7 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
         $options: 'i',
       };
     }
+    //bike availability
     if (query.searchByAvailability) {
       if (query.searchByAvailability === 'Available') {
         filterQuery.isAvailable = true;
