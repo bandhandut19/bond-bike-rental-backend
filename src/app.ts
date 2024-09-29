@@ -5,6 +5,7 @@ import router from './app/routes';
 import notFound from './app/middlewares/notFound';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
+
 const app: Application = express();
 
 const corsOptions = {
@@ -12,10 +13,11 @@ const corsOptions = {
   credentials: true, // Allow credentials (cookies, authorization headers)
 };
 
-//parsers
+// Set up middleware
+app.use(cors(corsOptions)); // Preflight handling is automatically done by the cors middleware
 app.use(express.json());
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Preflight handling
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -27,14 +29,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
-app.use(cookieParser());
 app.use('/api', router);
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Bond Bike Rentals');
 });
 
-// error handling middlewares
+// Error handling middlewares
 app.use(notFound);
 app.use(globalErrorHandler);
 
