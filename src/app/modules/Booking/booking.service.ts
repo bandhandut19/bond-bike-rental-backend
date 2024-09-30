@@ -165,8 +165,8 @@ const setTotalCostOfSpecificUserAndReturnBikeIntoDB = async (
         new Date(startTime).getTime()) /
       (1000 * 60 * 60);
     console.log(totalRentHour);
-    const totalCost = Number((pricePerHour * totalRentHour).toFixed(2));
-
+    const exatctTotalCost = Number((pricePerHour * totalRentHour).toFixed(2));
+    const totalCost = exatctTotalCost - 100;
     const updateBooking = await Booking.findByIdAndUpdate(
       bookingId,
       {
