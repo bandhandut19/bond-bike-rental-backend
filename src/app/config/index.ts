@@ -16,4 +16,10 @@ export default {
   PAYMENT_URL: process.env.PAYMENT_URL,
   NODE_ENV: process.env.NODE_ENV,
   PAYMENT_VERIFY_URL: process.env.PAYMENT_VERIFY_URL,
+  ADMIN_NAME: process.env.ADMIN_NAME,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+  ADMIN_ADDRESS: process.env.ADMIN_ADDRESS,
+  ADMIN_PHONE: process.env.ADMIN_PHONE,
+  ADMIN_ROLE: process.env.ADMIN_ROLE,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
 };
