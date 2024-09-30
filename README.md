@@ -57,6 +57,19 @@ Before you begin, ensure you have met the following requirements:
     JWT_REFRESH_SECRET=your_secret_key
     JWT_ACCESS_EXPIRES_IN=your_secret_key
     JWT_REFRESH_EXPIRES_IN=your_secret_key
+    STORE_ID = "YOUR_AMARPAY_STORE_ID"
+    SIGNATURE_KEY ="YOUR_AMARPAY_SIGNATURE_KEY"
+    PAYMENT_URL = "YOUR_AMARPAY_PAYMENT_URL"
+    PAYMENT_VERIFY_URL = "YOUR_AMARPAY_PAYMENT_VERIFY_URL"
+
+
+    ADMIN_NAME="YourName"
+    ADMIN_EMAIL= "YourEmail"
+    ADMIN_ADDRESS= "YourAddress"
+    ADMIN_PHONE= "YourPhone"
+    ADMIN_ROLE= "admin"
+    ADMIN_PASSWORD= "YourPassword"
+    
 ---
 ## 🖥️Running the Application
   1. **Compile TypeScript to JavaScript:**
@@ -68,8 +81,10 @@ Before you begin, ensure you have met the following requirements:
       ```bash
       mongod
   3. **Run the application:**
+      1. After running the application it will automaticaly add an admin in your database.
+      2. After 1st run you can comment out seedAdmin() function in server.ts file.
       ```bash
-      npm start
+      npm run start:dev
   4. **Access the application:**
       Open your browser and navigate to http://localhost:5000.
 
