@@ -84,7 +84,7 @@ Before you begin, ensure you have met the following requirements:
       1. After running the application it will automaticaly add an admin in your database.
       2. After 1st run you can comment out seedAdmin() function in server.ts file.
       ```bash
-      npm start
+      npm run dev
   4. **Access the application:**
       Open your browser and navigate to http://localhost:5000.
 
