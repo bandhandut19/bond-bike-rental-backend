@@ -1,3 +1,7 @@
+## Initially Auto Added Admin Credentials
+  - bondon21081@gmail.com
+  - 1200
+
 [![Bond Bike Rental](https://i.postimg.cc/BZBWnv0D/Untitled-design.png)](https://postimg.cc/jC238tCd)
 <h1 align="center">
   Bond Bike Rental 🚀
