@@ -1,6 +1,3 @@
-## Initially Auto Added Admin Credentials For Checking Purposes of PH TEAM written will delete it later on
-  - bondon21081@gmail.com
-  - 1200
 
 [![Bond Bike Rental](https://i.postimg.cc/BZBWnv0D/Untitled-design.png)](https://postimg.cc/jC238tCd)
 <h1 align="center">
